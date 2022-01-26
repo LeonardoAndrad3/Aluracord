@@ -1,35 +1,9 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
+import React from 'react';
 import appConfig from '../config.json';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
-
-function GlobalStyle() {
-  return (
-    <style global jsx>{`
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        list-style: none;
-      }
-      body {
-        font-family: 'Open Sans', sans-serif;
-      }
-      /* App fit Height */ 
-      html, body, #__next {
-        min-height: 100vh;
-        display: flex;
-        flex: 1;
-      }
-      #__next {
-        flex: 1;
-      }
-      #__next > * {
-        flex: 1;
-      }
-      /* ./App fit Height */ 
-    `}</style>
-  );
-}
 
 function Titulo(props) {
   const Tag = props.tag || 'h1';
@@ -47,6 +21,8 @@ function Titulo(props) {
   );
 }
 
+
+
 // Componente React
 // function HomePage() {
 //     // JSX
@@ -61,11 +37,14 @@ function Titulo(props) {
 // export default HomePage
 
 export default function PaginaInicial() {
-  const username = 'LeonardoAndrad3';
+  // const username = 'LeonardoAndrad3';
+
+  const [username, setUsername] = React.useState("leonardoAndrad3");
+  const pagesRouter = useRouter();
+  const [img, setImg] = React.useState(username);
 
   return (
     <>
-      <GlobalStyle />
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -93,24 +72,63 @@ export default function PaginaInicial() {
        
           <Box
             as="form"
+            onSubmit={(event)=>{
+              event.preventDefault();
+              pagesRouter.push("/chat");
+            }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
             }}
           >
-               <Image
-            styleSheet={{
-              width: "15%"
-            }}
-            src='https://cdn-icons.flaticon.com/png/512/2592/premium/2592258.png?token=exp=1643161139~hmac=3a95da1e36b265b3133abf0c1c194a2d'
+            <Image
+              styleSheet={{
+                width: "50px",
+                minHeight: "50px",
+              }}
+              src='https://cdn-icons.flaticon.com/png/512/2592/premium/2592258.png?token=exp=1643205182~hmac=12b2baaa947ab2b7d677e3105eb9c4b7'
             />
+
             <Titulo tag="h2">Welcome everyone</Titulo> 
+            
             <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
               {appConfig.name}
             </Text>
 
+{/* 
+              <input
+                type="text"
+                value={username}
+                onChange={(event) => {
+                  console.log("usuario digitou", event)
+
+                  //Onde está?
+                  console.log(event.target.value);
+
+                  //mudar váriavel pelo useState do react
+
+                  const value = event.target.value;
+
+                  setUsername(value);
+                }}
+
+              /> */}
       
             <TextField
+              value={username}
+              
+              onChange={(event)=>{
+                const {value} = event.target;
+                setUsername(value);
+                console.log(value);
+                if(value.length > 2){
+                  setImg(value);
+                }else{
+                  setImg();
+                }
+              }}
+
+
               fullWidth
               textFieldColors={{
                 neutral: {
@@ -165,9 +183,10 @@ export default function PaginaInicial() {
                 borderRadius: '50%',
                 marginBottom: '16px',
               }}
-              src={`https://github.com/${username}.png`}  
-
+              
+              src={`https://github.com/${img}.png`}  
             />
+
             <Text
               variant="body4"
               styleSheet={{
