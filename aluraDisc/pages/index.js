@@ -104,7 +104,7 @@ export default function PaginaInicial() {
             }}
             src='https://cdn-icons.flaticon.com/png/512/2592/premium/2592258.png?token=exp=1643161139~hmac=3a95da1e36b265b3133abf0c1c194a2d'
             />
-            <Titulo tag="h2">Welcome the all</Titulo> 
+            <Titulo tag="h2">Welcome everyone</Titulo> 
             <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
               {appConfig.name}
             </Text>
@@ -152,7 +152,7 @@ export default function PaginaInicial() {
               alignItems: 'center',
               maxWidth: '200px',
               padding: '16px',
-              backgroundColor: appConfig.theme.colors.neutrals["500"],
+              backgroundColor: appConfig.theme.colors.neutrals["800"],
               border: '1px solid',
               borderColor: appConfig.theme.colors.neutrals[0],
               borderRadius: '10px',
