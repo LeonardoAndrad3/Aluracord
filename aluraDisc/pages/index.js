@@ -2,8 +2,6 @@ import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import { useRouter } from 'next/router';
-import axios from 'axios';
-
 
 function Titulo(props) {
   const Tag = props.tag || 'h1';
@@ -20,8 +18,6 @@ function Titulo(props) {
     </>
   );
 }
-
-
 
 // Componente React
 // function HomePage() {
@@ -127,7 +123,6 @@ export default function PaginaInicial() {
                   setImg();
                 }
               }}
-
 
               fullWidth
               textFieldColors={{
