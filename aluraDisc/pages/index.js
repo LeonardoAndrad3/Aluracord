@@ -70,13 +70,15 @@ export default function PaginaInicial() {
             as="form"
             onSubmit={(event)=>{
               event.preventDefault();
-              pagesRouter.push("/chat");
+              pagesRouter.push(`/chat?user=${username}`);
+              
             }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
             }}
           >
+            
             <Image
               styleSheet={{
                 width: "50px",

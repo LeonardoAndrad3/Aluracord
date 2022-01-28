@@ -2,6 +2,10 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import {createClient} from '@supabase/supabase-js';
+import { useRouter } from 'next/router';
+import {ButtonSendSticker} from '../src/components/ButtonSticker.js';
+
+
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyMzI1NiwiZXhwIjoxOTU4ODk5MjU2fQ.yvAyFRJWHBqMofXMGtI0UiBrb95XrJ7BFCUGOqjcEEs';
 const SUPABASE_URL =  'https://sneppqmpnqmeoqzgbleo.supabase.co';
@@ -13,6 +17,9 @@ export default function ChatPage() {
 
     const [mensagem, setMensagem] = React.useState('');
     const [listMensagem, setListMensagem] = React.useState([]);
+    const user = useRouter().query.user;
+    
+
   
     React.useEffect(()=>{
         supabaseClient
@@ -22,13 +29,13 @@ export default function ChatPage() {
             .then(({data})=>{
                 setListMensagem(data);
             })
-    }, [])
+    }, [handleNovaMensagem])
 
 
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
             //Pegando Id do supabase
-            de: "leonardoAndrad3",
+            de: user,
             texto: novaMensagem
         }
 
@@ -43,6 +50,10 @@ export default function ChatPage() {
             ]);
             setMensagem('');
         })
+        
+        $('.no-scroll').animate({
+            scrollTop: $('.no-scroll').offset().top
+        }, 700)
     }
 
     return (
@@ -70,6 +81,7 @@ export default function ChatPage() {
                 }}
             >
                 <Header />
+                
                 <Box
                     styleSheet={{
                         position: 'relative',
@@ -100,6 +112,11 @@ export default function ChatPage() {
                             alignItems: 'stretch',
                         }}
                     >
+                          <ButtonSendSticker 
+                            onStickerClick={(sticker)=>{
+                                handleNovaMensagem(`:sticker: ${sticker}`)
+                            }}
+                        />
                         <TextField
                             value={mensagem}
                             onChange={(event) => {
@@ -113,7 +130,7 @@ export default function ChatPage() {
                                         handleNovaMensagem(mensagem);
                                     }
                                     event.preventDefault();
-                                }                         
+                                }                   
                                 
                             }}
                             
@@ -141,14 +158,18 @@ export default function ChatPage() {
                                 height: '44px',
                                 padding: '5px 6px',
                                 borderRadius: '0 5px 5px 0',
+                                backgroundColor: appConfig.theme.colors.rgb[700],
+                                focus: {
+                                    backgroundColor: appConfig.theme.colors.rgb[999],
+                                },
+                                hover: {
+                                    backgroundColor: appConfig.theme.colors.rgb[999],
+
+                                }  
                             }}
-                            buttonColors={{
-                                contrastColor: appConfig.theme.colors.neutrals['000'],
-                                mainColor: appConfig.theme.colors.primary['050'],
-                                mainColorLight: appConfig.theme.colors.neutrals['050'],
-                                mainColorStrong: appConfig.theme.colors.primary[300]
-                            }}
+                          
                         />   
+                      
                     </Box>
                 </Box>
             </Box>
@@ -179,10 +200,10 @@ function MessageList(mensagem) {
     return (
         <Box
             tag="ul"
+            className='no-scroll'
             styleSheet={{
-                overflow: 'scroll',
-                overflow: 'hidden',
                 display: 'flex',
+                overflowY: 'scroll',
                 flexDirection: 'column-reverse',
                 flex: 1,
                 color: appConfig.theme.colors.neutrals["000"],
@@ -208,7 +229,7 @@ function MessageList(mensagem) {
                                 alignItems: 'center',
                                 display: 'flex',
                                 marginBottom: '6px',
-                                
+                               
                             }}
                         >
                             <Image
@@ -218,6 +239,7 @@ function MessageList(mensagem) {
                                     borderRadius: '50%',
                                     display: 'inline-block',
                                     marginRight: '8px',
+                                   
                                 }}
                                 src={`https://github.com/${mensagemAtual.de}.png`}
                             />
@@ -247,19 +269,28 @@ function MessageList(mensagem) {
                                 width: '0px'
                             }}
                             label='X'
-                            onClick={async ()=>{
-
-                                const {data, erro} =  supabaseClient
+                            onClick={async (data)=>{
+                                console.log(data)
+                                supabaseClient
                                 .from('listMensagem')
                                 .delete()
                                 .match({id: mensagemAtual.id})
-                                .then(()=>{                                    
-                                                                               
+                                .then((data)=>{                                    
+                                        return console.log(data)                                    
                                     })
                             }}
                             />
                         </Box>
-                        {mensagemAtual.texto}
+                        {/* teste condicional: {mensagemAtual.texto.startsWith(':sticker:').toString()} */}
+                        {mensagemAtual.texto.startsWith(':sticker:')
+                        ?(
+                            <Image src={mensagemAtual.texto.replace(':sticker:', '')}/>
+                        )
+                        :(
+                            mensagemAtual.texto
+                        )
+                        }
+  
                     </Text>
                 )
             })}
